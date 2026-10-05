@@ -1,6 +1,6 @@
 {
   "version": 10,
-  "configuration_seed": "local-37/16",
+  "configuration_seed": "node-spacing-expanded-10-24",
   "source_sha256": "a8f1c6a74e6fb1eb0d952a3d34d6794ec6d630283be21a699824cf1597eb89fa",
   "roles": {
     "detector": 2,
@@ -111,9 +111,9 @@
       },
       {
         "id": 9,
-        "osm_node_id": "2306074471",
-        "lat": 10.7650512,
-        "lon": 106.7501142,
+        "osm_node_id": "7808700553",
+        "lat": 10.7657004,
+        "lon": 106.749672,
         "demand": 10,
         "ready_time": 0,
         "due_date": 100000,
@@ -121,9 +121,9 @@
       },
       {
         "id": 10,
-        "osm_node_id": "5780899275",
-        "lat": 10.7432809,
-        "lon": 106.7356269,
+        "osm_node_id": "5780899264",
+        "lat": 10.7427688,
+        "lon": 106.736303,
         "demand": 10,
         "ready_time": 0,
         "due_date": 100000,
@@ -261,9 +261,9 @@
       },
       {
         "id": 24,
-        "osm_node_id": "2394698126",
-        "lat": 10.7436627,
-        "lon": 106.7350048,
+        "osm_node_id": "715729878",
+        "lat": 10.7445006,
+        "lon": 106.7351169,
         "demand": 10,
         "ready_time": 0,
         "due_date": 100000,

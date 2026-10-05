@@ -1,0 +1,20 @@
+[
+  {
+    "id": 10,
+    "ok": true,
+    "failures": [
+      "detours_not_distinct",
+      "vehicle_6_weak_visible_change"
+    ]
+  },
+  {
+    "id": 24,
+    "ok": false,
+    "reason": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'osm:723182174:1:f'\n- 'osm:721954310:4:f'\n         ^\n"
+  },
+  {
+    "id": 9,
+    "ok": false,
+    "reason": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'osm:304468617:0:f'\n- 'osm:721954310:4:f'\n       ^\n"
+  }
+]

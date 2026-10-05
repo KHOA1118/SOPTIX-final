@@ -24,38 +24,9 @@ function resetStory(){
   $('route-comparison-key').hidden=true;storyPhase('READY');renderStoryFocus();
 }
 function screenPoint(p){const [x,y]=MapData.displayProjection(state.network)(p);return [x*state.zoom+state.tx,y*state.zoom+state.ty];}
-let nodeDisplayCache={key:null,nodes:[]};
 function layoutLabels(){
-  if(!state.network)return;
-  const originalNodes=state.nodes.map(n=>{const [x,y]=screenPoint(n);return {id:n.id,x,y,text:n.id===0?'DEPOT':String(n.id)};});
-  const map=$('network-map'),rect=map.getBoundingClientRect();
-  const key=JSON.stringify([originalNodes,state.zoom,map.clientWidth,map.clientHeight]);
-  if(nodeDisplayCache.key!==key){
-    const obstacles=[...document.querySelectorAll('.map-tools button,[data-vehicle-id]')].map(el=>{
-      const r=el.getBoundingClientRect();return {x:r.x-rect.x,y:r.y-rect.y,w:r.width,h:r.height};
-    });
-    nodeDisplayCache={key,nodes:DemoPresentation.declutterNodes(originalNodes,obstacles)};
-  }
-  const nodes=nodeDisplayCache.nodes;
-  nodes.forEach((n,i)=>{
-    const group=$('customer-layer').querySelector(`[data-node-id="${n.id}"]`);
-    if(!group)return;
-    const original=originalNodes[i],x=(n.x-state.tx)/state.zoom,y=(n.y-state.ty)/state.zoom;
-    group.style.transform=`translate(${x}px,${y}px)`;
-    group.dataset.displayDx=n.dx;group.dataset.displayDy=n.dy;
-    let leader=$('customer-layer').querySelector(`[data-node-leader="${n.id}"]`);
-    if(!leader){leader=svgElement('line',{'data-node-leader':n.id,class:'node-leader','vector-effect':'non-scaling-stroke'});$('customer-layer').prepend(leader);}
-    for(const [name,value] of Object.entries({x1:(original.x-state.tx)/state.zoom,y1:(original.y-state.ty)/state.zoom,x2:x,y2:y}))leader.setAttribute(name,value);
-    leader.style.display=Math.hypot(n.dx,n.dy)>6?'':'none';
-  });
-  const segments=[];
-  for(const r of state.geometry?.[state.mode==='before'?'initial_routes':'routes']||[]){const p=r.coordinates.map(([lon,lat])=>screenPoint({lon,lat}));for(let i=1;i<p.length;i++)segments.push([p[i-1],p[i]]);}
-  for(const p of DemoPresentation.placeLabels(nodes,segments,$('network-map').clientWidth,$('network-map').clientHeight)){
-    const el=$('customer-layer').querySelector(`[data-node-id="${p.id}"] .node-label`);
-    // SVG text x/y attributes work consistently; CSS geometry properties do not
-    // position <text> in all browsers. Only label offsets are changed here.
-    if(el){el.setAttribute('x',p.dx/state.zoom);el.setAttribute('y',p.dy/state.zoom);}
-  }
+  // Customer labels stay at the original x=8, y=-8 set by renderMap.
+  // Keep incident/rerouting callout layout independent from customer markers.
   layoutStoryCallouts();
 }
 function layoutStoryCallouts(){
@@ -460,7 +431,8 @@ function resetView() {
   const xs=p.map(p=>p[0]),ys=p.map(p=>p[1]);const minx=Math.min(...xs),maxx=Math.max(...xs),miny=Math.min(...ys),maxy=Math.max(...ys);
   const map=$('network-map'),w=map.clientWidth||800,h=map.clientHeight||680;
   map.setAttribute('viewBox',`0 0 ${w} ${h}`);
-  state.zoom=Math.min(Math.max(w-120,100)/Math.max(maxx-minx,1),Math.max(h-100,100)/Math.max(maxy-miny,1));
+  // Fit all real customer positions and route geometry with an 8% margin per side.
+  state.zoom=Math.min(w*.84/Math.max(maxx-minx,1),h*.84/Math.max(maxy-miny,1));
   state.tx=w/2-state.zoom*(minx+maxx)/2;state.ty=h/2-state.zoom*(miny+maxy)/2;transformView();
 }
 function transformView() {
