@@ -63,8 +63,10 @@ allow a fresh run; there is no mock optimization fallback.
 `data/presentation_scenario.json` stores fixed geographic inputs, LNS seed,
 fleet settings, map hash, hotspot timing and validation metadata. It contains no precomputed
 solutions or savings. Every run invokes real initial LNS and real dynamic LNS.
-Hidden congestion is injected at the fixture-defined time (62.689 simulated seconds
-for configuration 54), just after Vehicle 5 enters the shared delivery edge. Known costs stay unchanged
+The default fixture matches the approved port-8017 preview: configuration
+`node-spacing-expanded-10-24`, with the updated customer coordinates.
+Hidden congestion is injected at 29.569 simulated seconds after Vehicle 2 enters
+the shared delivery edge. Vehicle 2 detects it; Vehicles 4, 5 and 6 reroute. Known costs stay unchanged
 until two consecutive 500 ms telemetry intervals observe speed at or below 50%.
 The event then progresses DETECTED → REOPTIMIZING → ROUTES_UPDATED. A single
 process worker runs the real LNS while the browser polls every 300 ms and keeps
@@ -164,3 +166,10 @@ OSM; relative overrides (including `--map-data`) resolve from the project root,
 independent of the working directory. No API keys or database credentials are used.
 
 Current scenario evidence and reproduction commands: [SCENARIO_TIMING_VERIFICATION.md](SCENARIO_TIMING_VERIFICATION.md). Vehicle 5 detects with two deliveries remaining; Vehicle 1 proactively avoids the edge, while Vehicle 4 retains its route.
+
+The default three-affected-vehicle scenario retains known visual limitations:
+V4/V5 detours are not spatially distinct and V6 has a small relative geometry change.
+The legacy strict V5-detector/V1-V4 presentation test is not an acceptance result
+for this fixture. Use `node tools/validate_three_affected.cjs data/presentation_scenario.json`
+with `LNS_TEST_URL` pointing to the running server for the role-aware diagnostic;
+it reports these limitations without weakening thresholds.
